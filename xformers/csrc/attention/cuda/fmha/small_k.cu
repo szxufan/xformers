@@ -85,7 +85,7 @@ __device__ __forceinline__ void myGpuAtomicAdd(scalar_t* address, float val) {
 template <typename scalar_t, int WARP_SIZE>
 __device__ __forceinline__ scalar_t warpSum(scalar_t val) {
   for (int stride = WARP_SIZE / 2; stride > 0; stride >>= 1) {
-    val += __shfl_xor_sync(0xffffffff, val, stride, WARP_SIZE);
+    val += __shfl_xor(val, stride, WARP_SIZE);
   }
   return val;
 }
@@ -93,8 +93,8 @@ __device__ __forceinline__ scalar_t warpSum(scalar_t val) {
 template <typename scalar_t, int WARP_SIZE>
 __device__ __forceinline__ float2 warpSum(float2 val) {
   for (int stride = WARP_SIZE / 2; stride > 0; stride >>= 1) {
-    val.x += __shfl_xor_sync(0xffffffff, val.x, stride, WARP_SIZE);
-    val.y += __shfl_xor_sync(0xffffffff, val.y, stride, WARP_SIZE);
+    val.x += __shfl_xor(val.x, stride, WARP_SIZE);
+    val.y += __shfl_xor(val.y, stride, WARP_SIZE);
   }
   return val;
 }
@@ -102,10 +102,10 @@ __device__ __forceinline__ float2 warpSum(float2 val) {
 template <typename scalar_t, int WARP_SIZE>
 __device__ __forceinline__ float4 warpSum(float4 val) {
   for (int stride = WARP_SIZE / 2; stride > 0; stride >>= 1) {
-    val.x += __shfl_xor_sync(0xffffffff, val.x, stride, WARP_SIZE);
-    val.y += __shfl_xor_sync(0xffffffff, val.y, stride, WARP_SIZE);
-    val.z += __shfl_xor_sync(0xffffffff, val.z, stride, WARP_SIZE);
-    val.w += __shfl_xor_sync(0xffffffff, val.w, stride, WARP_SIZE);
+    val.x += __shfl_xor(val.x, stride, WARP_SIZE);
+    val.y += __shfl_xor(val.y, stride, WARP_SIZE);
+    val.z += __shfl_xor(val.z, stride, WARP_SIZE);
+    val.w += __shfl_xor(val.w, stride, WARP_SIZE);
   }
   return val;
 }
@@ -113,7 +113,7 @@ __device__ __forceinline__ float4 warpSum(float4 val) {
 template <typename scalar_t, int WARP_SIZE>
 __device__ __forceinline__ scalar_t warpMax(scalar_t val) {
   for (int stride = WARP_SIZE / 2; stride > 0; stride >>= 1) {
-    scalar_t tmp = __shfl_xor_sync(0xffffffff, val, stride, WARP_SIZE);
+    scalar_t tmp = __shfl_xor(val, stride, WARP_SIZE);
     val = tmp > val ? tmp : val;
   }
   return val;

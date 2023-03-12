@@ -35,7 +35,7 @@ __global__ void SoftmaxKernel(int m, int n, const float* __restrict__ input,
     max = x > max ? x : max;
   }
   for (int idx = 1; idx < blockDim.x; idx *= 2) {
-    float x = __shfl_xor_sync(0xffffffff, max, idx);
+    float x = __shfl_xor(max, idx);
     max = x > max ? x : max;
   }
 
@@ -46,7 +46,7 @@ __global__ void SoftmaxKernel(int m, int n, const float* __restrict__ input,
     norm += expf(Load(in + idx) - max);
   }
   for (int idx = 1; idx < blockDim.x; idx *= 2) {
-    norm += __shfl_xor_sync(0xffffffff, norm, idx);
+    norm += __shfl_xor(norm, idx);
   }
   norm = 1.0f / norm;
 

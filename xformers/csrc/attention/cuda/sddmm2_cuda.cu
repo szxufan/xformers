@@ -88,7 +88,7 @@ __global__ void sddmmCOO4Scale(
       multi += D1tmp0 * D2tmp0;
     }
     for (int stride = 16; stride > 0; stride >>= 1) {
-      multi += __shfl_xor_sync(0xffffffff, multi, stride, 32);
+      multi += __shfl_xor(multi, stride, 32);
     }
     if (threadIdx.x == 0 && threadIdx.y == 0) {
       O_cooVal[eid] = multi;
@@ -175,7 +175,7 @@ __global__ void sddmmCOO2Scale(
       multi += vecDot2<float2, float>(D1tmp0, D2tmp0);
     }
     for (int stride = 8; stride > 0; stride >>= 1) {
-      multi += __shfl_xor_sync(0xffffffff, multi, stride, 32);
+      multi += __shfl_xor(multi, stride, 32);
     }
     if (threadIdx.x == 0 && threadIdx.y == 0) {
       O_cooVal[eid] = multi;
@@ -258,7 +258,7 @@ __global__ void sddmmCOO1Scale(
       multi += D1tmp0 * D2tmp0;
     }
     for (int stride = 16; stride > 0; stride >>= 1) {
-      multi += __shfl_xor_sync(0xffffffff, multi, stride, 32);
+      multi += __shfl_xor(multi, stride, 32);
     }
     if (threadIdx.x == 0 && threadIdx.y == 0) {
       O_cooVal[eid] = multi;
@@ -348,7 +348,7 @@ __global__ void sddmmCSR2Scale(
       multi += vecDot2<float2, float>(D1tmp0, D2tmp0);
     }
     for (int stride = 8; stride > 0; stride >>= 1) {
-      multi += __shfl_xor_sync(0xffffffff, multi, stride, 32);
+      multi += __shfl_xor(multi, stride, 32);
     }
     if (threadIdx.x == 0 && threadIdx.y == 0) {
       O_csrVal[eid] = multi;
@@ -437,7 +437,7 @@ __global__ void sddmmCSR1Scale(
       multi += D1tmp0 * D2tmp0;
     }
     for (int stride = 16; stride > 0; stride >>= 1) {
-      multi += __shfl_xor_sync(0xffffffff, multi, stride, 32);
+      multi += __shfl_xor(multi, stride, 32);
     }
     if (threadIdx.x == 0 && threadIdx.y == 0) {
       O_csrVal[eid] = multi;

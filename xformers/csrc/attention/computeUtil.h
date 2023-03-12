@@ -122,10 +122,10 @@ __device__ __forceinline__ void AllReduce4(
     int stride,
     int warpSize) {
   for (; stride > 0; stride >>= 1) {
-    multi[0] += __shfl_xor_sync(0xffffffff, multi[0], stride, warpSize);
-    multi[1] += __shfl_xor_sync(0xffffffff, multi[1], stride, warpSize);
-    multi[2] += __shfl_xor_sync(0xffffffff, multi[2], stride, warpSize);
-    multi[3] += __shfl_xor_sync(0xffffffff, multi[3], stride, warpSize);
+    multi[0] += __shfl_xor(multi[0], stride, warpSize);
+    multi[1] += __shfl_xor(multi[1], stride, warpSize);
+    multi[2] += __shfl_xor(multi[2], stride, warpSize);
+    multi[3] += __shfl_xor(multi[3], stride, warpSize);
   }
 }
 

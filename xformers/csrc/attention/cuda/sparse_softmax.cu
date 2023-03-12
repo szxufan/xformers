@@ -60,7 +60,7 @@ __global__ void SparseSoftmaxKernel(
     max = x > max ? x : max;
   }
   for (int idx = 1; idx < blockDim.x; idx *= 2) {
-    float x = __shfl_xor_sync(0xffffffff, max, idx);
+    float x = __shfl_xor(max, idx);
     max = x > max ? x : max;
   }
 
@@ -71,7 +71,7 @@ __global__ void SparseSoftmaxKernel(
     norm += expf(Load(in + idx) - max);
   }
   for (int idx = 1; idx < blockDim.x; idx *= 2) {
-    norm += __shfl_xor_sync(0xffffffff, norm, idx);
+    norm += __shfl_xor(norm, idx);
   }
   norm = 1.0f / norm;
 
@@ -207,7 +207,7 @@ __global__ void SparseSoftmaxBackwardKernel(
     sum += sputnik::Load(in + idx) * sputnik::Load(grad + idx);
   }
   for (int idx = 1; idx < blockDim.x; idx *= 2) {
-    sum += __shfl_xor_sync(0xffffffff, sum, idx);
+    sum += __shfl_xor(sum, idx);
   }
 
   // step 2: Compute the gradients

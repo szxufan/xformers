@@ -61,7 +61,7 @@ struct AllReduce {
   __device__ __forceinline__ void ReduceStep(int lane, int i, int j) {
     const int kStep = Log2(lane);
     if ((threadIdx.x >> kStep) & 1) Swap(i, j, inputs);
-    inputs[i] += __shfl_xor_sync(kShflMask, inputs[j], lane, kBlockWidth);
+    inputs[i] += __shfl_xor(inputs[j], lane, kBlockWidth);
   }
 
   __device__ __forceinline__ void Reduce() {

@@ -76,7 +76,7 @@ struct Barrier {
 #if __CUDA_ARCH__ >= 700
   // The thread mask for synchronizing at the subwarp granularity. Not
   // needed on pre-Volta architectures.
-  uint32_t thread_mask = 0xffffffff;
+  // uint32_t thread_mask = 0xffffffff;
 #endif
 
   /**
@@ -89,15 +89,15 @@ struct Barrier {
 #if __CUDA_ARCH__ >= 700
     // For subwarp tilings with Volta and beyond, we need to set the
     // appropriate thread mask for synchronization.
-    if ((kThreadsPerOutputTile < 32) && (kThreadsPerOutputTile > 1)) {
+    // if ((kThreadsPerOutputTile < 32) && (kThreadsPerOutputTile > 1)) {
       // The basic pattern of the thread mask for a given number of threads
       // per output tile. We can compute this at compile-time and then just
       // shift the bits appropriately depending of this subwarps offset within
       // the thread-block.
-      constexpr uint32_t kBaseSubwarpMask =
-          StaticPow(2, kThreadsPerOutputTile) - 1;
-      thread_mask = kBaseSubwarpMask << (thread_idx_y * kThreadsPerOutputTile);
-    }
+      // constexpr uint32_t kBaseSubwarpMask =
+      //    StaticPow(2, kThreadsPerOutputTile) - 1;
+      // thread_mask = kBaseSubwarpMask << (thread_idx_y * kThreadsPerOutputTile);
+    //}
 #endif
   }
 
@@ -111,29 +111,28 @@ struct Barrier {
 #if __CUDA_ARCH__ >= 700
     // For Volta and on, synchronize at the subwarp level to ensure
     // correctness with independent thread scheduling.
-    if (kThreadsPerOutputTile > 32) {
-      __syncthreads();
-    } else if (kThreadsPerOutputTile > 1) {
-      __syncwarp(thread_mask);
-    }
-#else
+    // if (kThreadsPerOutputTile > 32) {
+    //   __syncthreads();
+    // } else if (kThreadsPerOutputTile > 1) {
+    //  __syncwarp(thread_mask);
+    // }
+#endif
     // For all architectures prior to Volta, only synchronize if multiple
     // warps are collaborating on a single 1d tile of the output matrix.
     if (kThreadsPerOutputTile > 32) {
       __syncthreads();
     }
-#endif
   }
 
   /**
    * @brief Returns the thread mask being used for synchronization.
    */
   __device__ __forceinline__ uint32_t ThreadMask() const {
-#if __CUDA_ARCH__ >= 700
-    return thread_mask;
-#else
+//#if __CUDA_ARCH__ >= 700
+    //return thread_mask;
+//#else
     return 0xffffffff;
-#endif
+//#endif
   }
 };
 

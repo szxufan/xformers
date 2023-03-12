@@ -2221,7 +2221,7 @@ struct AttentionBackwardKernel {
         "");
     CUTLASS_PRAGMA_UNROLL
     for (int i = 1; i < kNumThreadsPerLine; i *= 2) {
-      delta_value = delta_value + __shfl_xor_sync(0xffffffff, delta_value, i);
+      delta_value = delta_value + __shfl_xor(delta_value, i);
     }
 
     // Store in gmem

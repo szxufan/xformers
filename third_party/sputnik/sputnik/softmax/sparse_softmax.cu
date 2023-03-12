@@ -45,7 +45,7 @@ __global__ void SparseSoftmaxKernel(int m, int n,
     max = x > max ? x : max;
   }
   for (int idx = 1; idx < blockDim.x; idx *= 2) {
-    float x = __shfl_xor_sync(0xffffffff, max, idx);
+    float x = __shfl_xor(max, idx);
     max = x > max ? x : max;
   }
 
@@ -56,7 +56,7 @@ __global__ void SparseSoftmaxKernel(int m, int n,
     norm += expf(Load(in + idx) - max);
   }
   for (int idx = 1; idx < blockDim.x; idx *= 2) {
-    norm += __shfl_xor_sync(0xffffffff, norm, idx);
+    norm += __shfl_xor(norm, idx);
   }
   norm = 1.0f / norm;
 
