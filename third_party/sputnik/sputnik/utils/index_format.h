@@ -37,10 +37,10 @@ namespace sputnik {
  * Device-side buffer of `nonzeros` ints.
  * @param stream The CUDA stream to launch the kernels in.
  */
-cudaError_t Csr2Idx(int m, int n, int nonzeros,
+hipError_t Csr2Idx(int m, int n, int nonzeros,
                     const int* __restrict__ row_offsets,
                     const int* __restrict__ column_indices,
-                    int* __restrict__ linear_indices, cudaStream_t stream);
+                    int* __restrict__ linear_indices, hipStream_t stream);
 
 }  // namespace sputnik
 

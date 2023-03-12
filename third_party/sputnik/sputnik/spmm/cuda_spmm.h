@@ -48,20 +48,20 @@ namespace sputnik {
  * floats.
  * @param stream The CUDA stream to launch the kernels in.
  */
-cudaError_t CudaSpmm(int m, int k, int n, int nonzeros,
+hipError_t CudaSpmm(int m, int k, int n, int nonzeros,
                      const int* __restrict__ row_indices,
                      const float* __restrict__ values,
                      const int* __restrict__ row_offsets,
                      const int* __restrict__ column_indices,
                      const float* __restrict__ dense_matrix,
                      float* __restrict__ output_matrix,
-                     cudaStream_t stream);
+                     hipStream_t stream);
 
 /**
  * @brief Compute the product of a sparse matrix and a dense matrix, add
  * a bias, and apply a ReLU non-linearity.
  */
-cudaError_t CudaSpmmBiasRelu(int m, int k, int n, int nonzeros,
+hipError_t CudaSpmmBiasRelu(int m, int k, int n, int nonzeros,
                              const int* __restrict__ row_indices,
                              const float* __restrict__ values,
                              const int* __restrict__ row_offsets,
@@ -69,7 +69,7 @@ cudaError_t CudaSpmmBiasRelu(int m, int k, int n, int nonzeros,
                              const float* __restrict__ dense_matrix,
                              const float* __restrict__ bias,
                              float* __restrict__ output_matrix,
-                             cudaStream_t stream);
+                             hipStream_t stream);
 
 /**
  * @brief Compute the product of a sparse matrix and a dense matrix with
@@ -103,20 +103,20 @@ cudaError_t CudaSpmmBiasRelu(int m, int k, int n, int nonzeros,
  * half-precision floats.
  * @param stream The CUDA stream to launch the kernels in.
  */
-cudaError_t CudaSpmm(int m, int k, int n, int nonzeros,
+hipError_t CudaSpmm(int m, int k, int n, int nonzeros,
                      const int* __restrict__ row_indices,
                      const half2* __restrict__ values,
                      const int* __restrict__ row_offsets,
                      const short2* __restrict__ column_indices,
                      const half2* __restrict__ dense_matrix,
                      half2* __restrict__ output_matrix,
-                     cudaStream_t stream);
+                     hipStream_t stream);
 
 /**
  * @brief Compute the product of a sparse matrix and a dense matrix in
  * half-precision, add a bias, and apply a ReLU non-linearity.
  */
-cudaError_t CudaSpmmBiasRelu(int m, int k, int n, int nonzeros,
+hipError_t CudaSpmmBiasRelu(int m, int k, int n, int nonzeros,
                              const int* __restrict__ row_indices,
                              const half2* __restrict__ values,
                              const int* __restrict__ row_offsets,
@@ -124,7 +124,7 @@ cudaError_t CudaSpmmBiasRelu(int m, int k, int n, int nonzeros,
                              const half2* __restrict__ dense_matrix,
                              const float* __restrict__ bias,
                              half2* __restrict__ output_matrix,
-                             cudaStream_t stream);
+                             hipStream_t stream);
 
 /**
  * @brief SpMM variant with hyperparameter template arguments exposed.
@@ -165,7 +165,7 @@ cudaError_t CudaSpmmBiasRelu(int m, int k, int n, int nonzeros,
  * @param stream The CUDA stream to launch the kernels in.
  */
 template <typename Config>
-cudaError_t CudaSpmmEx(
+hipError_t CudaSpmmEx(
     int m, int k, int n, int nonzeros,
     const int* __restrict__ row_indices,
     const typename Config::ScalarValue* __restrict__ values,
@@ -174,7 +174,7 @@ cudaError_t CudaSpmmEx(
     const typename Config::ScalarValue* __restrict__ dense_matrix,
     const float* __restrict__ bias,
     typename Config::ScalarValue* __restrict__ output_matrix,
-    cudaStream_t stream);
+    hipStream_t stream);
 
 }  // namespace sputnik
 

@@ -24,9 +24,9 @@ namespace sputnik {
  *
  * For NCHW layout.
  */
-cudaError_t BiasRelu(int n, int c, int d, const float* __restrict__ in,
+hipError_t BiasRelu(int n, int c, int d, const float* __restrict__ in,
                      const float* __restrict__ bias, float* __restrict__ out,
-                     cudaStream_t stream);
+                     hipStream_t stream);
 
 }  // namespace sputnik
 

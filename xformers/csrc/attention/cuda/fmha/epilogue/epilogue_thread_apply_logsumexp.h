@@ -35,7 +35,7 @@
 
 #pragma once
 
-#include <cuda_fp16.h>
+#include <hip/hip_fp16.h>
 
 #include "cutlass/array.h"
 #include "cutlass/cutlass.h"

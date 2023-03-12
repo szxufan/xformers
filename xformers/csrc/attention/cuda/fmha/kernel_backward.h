@@ -1,14 +1,15 @@
+#include "hip/hip_runtime.h"
 #pragma once
 
 #include <cmath>
 #include <type_traits>
 #include <vector>
 
-#include <cuda_fp16.h>
-#include <curand_kernel.h>
+#include <hip/hip_fp16.h>
+#include <hiprand_kernel.h>
 
 #ifdef HAS_PYTORCH
-#include <ATen/cuda/CUDAContext.h>
+#include <ATen/cuda/HIPContext.h>
 #include <ATen/cuda/CUDAGeneratorImpl.h>
 #include <c10/cuda/CUDAGuard.h>
 #include <ATen/cuda/CUDAGraphsUtils.cuh>
@@ -1182,7 +1183,7 @@ struct AttentionBackwardKernel {
 
     OutputFragments output_frags;
 
-    curandStatePhilox4_32_10_t rng_state_init;
+    hiprandStatePhilox4_32_10_t rng_state_init;
 #ifdef HAS_PYTORCH
     if (kApplyDropout) {
       auto seeds = at::cuda::philox::unpack(p.rng_engine_inputs);
@@ -1194,7 +1195,7 @@ struct AttentionBackwardKernel {
       // initializing rng state is very expensive, so we run once per kernel,
       // rather than once per iteration. each iteration takes a copy of the
       // initialized RNG state and offsets it as needed.
-      curand_init(
+      hiprand_init(
           std::get<0>(seeds),
           0,
           std::get<1>(seeds) + p.dropout_batch_head_rng_offset,
@@ -1308,7 +1309,7 @@ struct AttentionBackwardKernel {
       Params const& p,
       int32_t query_start,
       int32_t key_start,
-      const curandStatePhilox4_32_10_t& curand_state_init) {
+      const hiprandStatePhilox4_32_10_t& curand_state_init) {
     cutlass::MatrixCoord no_offset{0, 0};
     accum_t scale = p.scale;
     int16_t thread_id = threadIdx.x + threadIdx.y * blockDim.x;
@@ -1545,7 +1546,7 @@ struct AttentionBackwardKernel {
 
         if (thread_i < num_queries_in_block &&
             thread_start_j < num_keys_in_block) {
-          curandStatePhilox4_32_10_t curand_state = curand_state_init;
+          hiprandStatePhilox4_32_10_t curand_state = curand_state_init;
           skipahead(
               (query_start + thread_i) * p.num_keys +
                   (key_start + thread_start_j),
@@ -1557,7 +1558,7 @@ struct AttentionBackwardKernel {
                cutlass::fast_min(thread_start_j + elts_per_thread,
                                  num_keys_in_block);
                zij_start_col_idx += 4) {
-            const float4 rand_uniform_quad = curand_uniform4(&curand_state);
+            const float4 rand_uniform_quad = hiprand_uniform4(&curand_state);
 
             CUTLASS_PRAGMA_UNROLL
             for (int quad_idx = 0; quad_idx < 4; ++quad_idx) {

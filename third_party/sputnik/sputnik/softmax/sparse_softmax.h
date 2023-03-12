@@ -23,13 +23,13 @@ namespace sputnik {
  * @brief Computes softmax function across the last dim of a sparse
  * matrix.
  */
-cudaError_t SparseSoftmax(int m, int n, int nonzeros,
+hipError_t SparseSoftmax(int m, int n, int nonzeros,
                           const float* __restrict__ values,
                           const int* __restrict__ row_indices,
                           const int* __restrict__ row_offsets,
                           const int* __restrict__ column_indices,
                           float* __restrict__ output_values,
-                          cudaStream_t stream);
+                          hipStream_t stream);
 
 }  // namespace sputnik
 

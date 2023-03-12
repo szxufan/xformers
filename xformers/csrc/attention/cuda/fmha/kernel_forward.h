@@ -1,3 +1,4 @@
+#include "hip/hip_runtime.h"
 #pragma once
 
 #ifdef HAS_PYTORCH
@@ -5,7 +6,7 @@
 #include <ATen/cuda/CUDAGraphsUtils.cuh>
 #endif
 
-#include <curand_kernel.h>
+#include <hiprand_kernel.h>
 #include <cmath>
 #include <vector>
 
@@ -625,7 +626,7 @@ struct AttentionKernel {
         };
 
 #ifdef HAS_PYTORCH
-    curandStatePhilox4_32_10_t curand_state_init;
+    hiprandStatePhilox4_32_10_t curand_state_init;
     if (kSupportsDropout && p.use_dropout) {
       const auto seeds = at::cuda::philox::unpack(p.rng_engine_inputs);
 
@@ -637,7 +638,7 @@ struct AttentionKernel {
       // initializing rng state is very expensive, so we run once per kernel,
       // rather than once per iteration. each iteration takes a copy of the
       // initialized RNG state and offsets it as needed.
-      curand_init(
+      hiprand_init(
           std::get<0>(seeds),
           0,
           std::get<1>(seeds) + p.dropout_batch_head_rng_offset,
@@ -876,7 +877,7 @@ struct AttentionKernel {
             (thread_id() % threads_per_row) * elts_per_thread;
 
         if (thread_i < problem_size_0_m && thread_start_j < problem_size_0_n) {
-          curandStatePhilox4_32_10_t curand_state = curand_state_init;
+          hiprandStatePhilox4_32_10_t curand_state = curand_state_init;
           skipahead(
               static_cast<unsigned long long>(
                   (query_start + thread_i) * p.num_keys +
@@ -890,7 +891,7 @@ struct AttentionKernel {
                cutlass::fast_min(thread_start_j + elts_per_thread,
                                  problem_size_0_n);
                sij_start_col_idx += 4) {
-            const float4 rand_uniform_quad = curand_uniform4(&curand_state);
+            const float4 rand_uniform_quad = hiprand_uniform4(&curand_state);
 
             CUTLASS_PRAGMA_UNROLL
             for (int quad_idx = 0; quad_idx < 4; ++quad_idx) {

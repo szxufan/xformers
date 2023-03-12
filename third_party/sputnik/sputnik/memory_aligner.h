@@ -81,7 +81,7 @@ struct MemoryAligner {
    * @brief Potentially align the sparse matrix pointers to the vector width.
    *
    * NOTE: This code effectively reduces the row offset to the nearest 128
-   * or 64-byte aligned value. All memory allocated with cudaMalloc is 128-
+   * or 64-byte aligned value. All memory allocated with hipMalloc is 128-
    * byte aligned, thus this code will never cause our kernels to issue out-
    * of-bounds memory accesses to the region before the allocations used to
    * store the sparse matrix.

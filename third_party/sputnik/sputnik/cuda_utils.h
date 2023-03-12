@@ -15,8 +15,8 @@
 #ifndef THIRD_PARTY_SPUTNIK_CUDA_UTILS_H_
 #define THIRD_PARTY_SPUTNIK_CUDA_UTILS_H_
 
-#include <cuda_fp16.h>
-#include <cuda_runtime.h>
+#include <hip/hip_fp16.h>
+#include <hip/hip_runtime.h>
 
 namespace sputnik {
 

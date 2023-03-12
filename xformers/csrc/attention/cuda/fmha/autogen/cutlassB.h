@@ -1,3 +1,4 @@
+#include "hip/hip_runtime.h"
 // This file is auto-generated. See "generate_kernels.py"
 #pragma once
 #ifndef XFORMERS_MEM_EFF_ATTENTION_DISABLE_BACKWARD

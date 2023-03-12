@@ -22,28 +22,28 @@ namespace sputnik {
 /**
  * @brief Compute a sampled dense-dense matrix product.
  */
-cudaError_t CudaSddmm(int m, int k, int n, int nonzeros,
+hipError_t CudaSddmm(int m, int k, int n, int nonzeros,
                       const int* __restrict__ row_indices,
                       const int* __restrict__ row_offsets,
                       const int* __restrict__ column_indices,
                       const float* __restrict__ lhs_matrix,
                       const float* __restrict__ rhs_matrix,
                       float* __restrict__ output_values,
-                      cudaStream_t stream);
+                      hipStream_t stream);
 
 /**
  * @brief Compute a sampled dense-dense matrix product.
  */
 template <typename LoadType, int kBlockItemsY, int kBlockItemsK,
           int kBlockItemsX, int kBlockWidth, int kPredicateK = true>
-cudaError_t CudaSddmmEx(int m, int k, int n, int nonzeros,
+hipError_t CudaSddmmEx(int m, int k, int n, int nonzeros,
                         const int* __restrict__ row_indices,
                         const int* __restrict__ row_offsets,
                         const int* __restrict__ column_indices,
                         const float* __restrict__ lhs_matrix,
                         const float* __restrict__ rhs_matrix,
                         float* __restrict__ output_values,
-                        cudaStream_t stream);
+                        hipStream_t stream);
 
 }  // namespace sputnik
 

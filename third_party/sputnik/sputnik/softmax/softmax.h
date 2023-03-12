@@ -22,8 +22,8 @@ namespace sputnik {
 /**
  * @brief Computes softmax function across the last dim of a matrix.
  */
-cudaError_t Softmax(int m, int n, const float* __restrict__ input,
-                    float* __restrict__ output, cudaStream_t stream);
+hipError_t Softmax(int m, int n, const float* __restrict__ input,
+                    float* __restrict__ output, hipStream_t stream);
 
 }  // namespace sputnik
 

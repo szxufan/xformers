@@ -33,7 +33,7 @@ namespace sputnik {
  * @brief Type conversion utilities.
  */
 template <typename In, typename Out>
-cudaError_t Convert(const In *in, Out *out, int n);
+hipError_t Convert(const In *in, Out *out, int n);
 
 /**
  * @brief Matrix creation utilities.
@@ -237,10 +237,10 @@ class CudaSparseMatrix {
    * @brief Cleanup the underlying storage.
    */
   ~CudaSparseMatrix() {
-    CUDA_CALL(cudaFree(values_));
-    CUDA_CALL(cudaFree(row_offsets_));
-    CUDA_CALL(cudaFree(column_indices_));
-    CUDA_CALL(cudaFree(row_indices_));
+    CUDA_CALL(hipFree(values_));
+    CUDA_CALL(hipFree(row_offsets_));
+    CUDA_CALL(hipFree(column_indices_));
+    CUDA_CALL(hipFree(row_indices_));
   }
 
   CudaSparseMatrix(const CudaSparseMatrix&) = delete;
@@ -378,7 +378,7 @@ class CudaMatrix {
    */
   explicit CudaMatrix(const Matrix& matrix);
 
-  ~CudaMatrix() { CUDA_CALL(cudaFree(values_)); }
+  ~CudaMatrix() { CUDA_CALL(hipFree(values_)); }
 
   CudaMatrix(const CudaMatrix&) = delete;
   CudaMatrix& operator=(const CudaMatrix&) = delete;
